@@ -1,4 +1,4 @@
-app = "indie-stack-blog"
+app = "indie-stack-blog-staging"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
