@@ -16,13 +16,29 @@ export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.slug, `params.slug is required`);
 
   const post = await getPost(params.slug);
+
+  // this is to handle chrome developer tool sending requestProvider.js.map request
+  // and making post invariant error
+  if (params.slug.match(/requestProvider\.js\.map$/)?.length) {
+    return json<LoaderData>({
+      post: {
+        title: "",
+        slug: "",
+        markdown: "",
+        createdAt: new Date(0),
+        updatedAt: new Date(0),
+      },
+      html: "",
+    });
+  }
   invariant(post, `Post not found: ${params.slug}`);
+
   const html = marked(post.markdown);
   return json<LoaderData>({ post, html });
 };
 
 export default function PostSlug() {
-  const { post, html } = useLoaderData() as LoaderData;
+  const { post, html } = useLoaderData<typeof loader>();
 
   return (
     <main className="mx-auto max-w-4xl">

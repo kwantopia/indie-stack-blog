@@ -8,11 +8,12 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async () => {
-  return json({ posts: await getPosts() });
+  return json<LoaderData>({ posts: await getPosts() });
 };
 
 export default function PostAdmin() {
-  const { posts } = useLoaderData() as LoaderData;
+  const { posts } = useLoaderData() as unknown as LoaderData;
+
   return (
     <div className="mx-auto max-w-4xl">
       <h1 className="my-6 mb-2 border-b-2 text-center text-3xl">Blog Admin</h1>

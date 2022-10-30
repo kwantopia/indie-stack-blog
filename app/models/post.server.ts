@@ -14,7 +14,7 @@ export async function getPost(slug: string) {
 export async function createPost(
   post: Pick<Post, "slug" | "title" | "markdown">
 ) {
-  console.log("Adding a post");
-  console.log(post);
+  // console.log("Adding a post");
+  // console.log(post);
   return prisma.post.create({ data: post });
 }
