@@ -20,6 +20,16 @@ export default function PostAdmin() {
       <div className="grid grid-cols-4 gap-6">
         <nav className="col-span-4 md:col-span-1">
           <ul>
+            <p>
+              <Link to="/posts/admin" className="text-blue-600 underline">
+                Create a New Post
+              </Link>
+            </p>
+          </ul>
+          <ul>
+            <br></br>
+          </ul>
+          <ul>
             {posts.map((post) => (
               <li key={post.slug}>
                 <Link to={post.slug} className="text-blue-600 underline">

@@ -38,7 +38,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export default function PostSlug() {
-  const { post, html } = useLoaderData<typeof loader>();
+  const { post, html } = useLoaderData() as unknown as LoaderData;
 
   return (
     <main className="mx-auto max-w-4xl">

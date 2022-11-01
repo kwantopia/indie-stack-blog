@@ -1,8 +1,37 @@
-import type { ActionFunction } from "@remix-run/node";
+import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { createPost } from "~/models/post.server";
+import { getPost, updatePost } from "~/models/post.server";
+import type { Post } from "~/models/post.server";
+
+type LoaderData = {
+  post: Post;
+};
+
+export const loader: LoaderFunction = async ({ params }) => {
+  invariant(params.slug, `params.slug is required`);
+
+  const post = await getPost(params.slug);
+
+  // this is to handle chrome developer tool sending requestProvider.js.map request
+  // and making post invariant error
+  if (params.slug.match(/requestProvider\.js\.map$/)?.length) {
+    return json<LoaderData>({
+      post: {
+        title: "temp",
+        slug: "temp",
+        markdown: "temp",
+        createdAt: new Date(0),
+        updatedAt: new Date(0),
+      },
+    });
+  }
+  invariant(post, `Post not found: ${params.slug}`);
+
+  //console.log("Loading post", post.slug);
+  return json<LoaderData>({ post });
+};
 
 type ActionData =
   | {
@@ -36,25 +65,31 @@ export const action: ActionFunction = async ({ request }) => {
   invariant(typeof slug === "string", "slug must be a string");
   invariant(typeof markdown === "string", "markdown must be a string");
 
-  await createPost({ title, slug, markdown });
+  await updatePost(slug, { title, slug, markdown });
 
   return redirect("/posts/admin");
 };
 
 const inputClassName = `w-full rounded border border-gray-500 px-2 py-1 text-lg`;
 
-export default function NewPost() {
+export default function ViewPost() {
   const errors = useActionData();
+  const { post } = useLoaderData() as unknown as LoaderData;
 
   return (
-    <Form method="post">
+    <Form method="post" key={post?.slug ?? "new"}>
       <p>
         <label>
           Post Title:{" "}
           {errors?.title ? (
             <em className="text-red-600">{errors.title}</em>
           ) : null}
-          <input type="text" name="title" className={inputClassName}></input>
+          <input
+            type="text"
+            name="title"
+            className={inputClassName}
+            defaultValue={post?.title}
+          />
         </label>
       </p>
       <p>
@@ -63,7 +98,12 @@ export default function NewPost() {
           {errors?.slug ? (
             <em className="text-red-600">{errors.slug}</em>
           ) : null}
-          <input type="text" name="slug" className={inputClassName}></input>
+          <input
+            type="text"
+            name="slug"
+            className={inputClassName}
+            defaultValue={post.slug}
+          />
         </label>
       </p>
       <p>
@@ -79,6 +119,7 @@ export default function NewPost() {
           rows={20}
           name="markdown"
           className={`${inputClassName} font-mono`}
+          defaultValue={post?.markdown}
         />
       </p>
       <p className="text-right">
