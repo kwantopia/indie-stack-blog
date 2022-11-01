@@ -26,11 +26,14 @@ describe("blog sanity tests", () => {
     cy.findByRole("link", { name: /Admin/i }).should("exist");
     cy.findByRole("link", { name: /Admin/i }).click();
 
-    const create_new_post_btn = cy.findByRole("link", {
-      name: /Create a New Post/i,
+    const create_new_post_btn = cy.findByRole("button", {
+      name: /Create Post/i,
     });
     create_new_post_btn.should("exist");
-    create_new_post_btn.click();
+
+    cy.findByLabelText("Post Title:").should("exist");
+    cy.findByLabelText("Post Slug:").should("exist");
+    cy.findByLabelText("Markdown:").should("exist");
 
     cy.findByRole("textbox", { name: /title/i }).type(testBlog.title);
     cy.findByRole("textbox", { name: /slug/i }).type(testBlog.slug);

@@ -18,3 +18,16 @@ export async function createPost(
   // console.log(post);
   return prisma.post.create({ data: post });
 }
+
+export async function updatePost(
+  slug: string,
+  post: Pick<Post, "slug" | "title" | "markdown">
+) {
+  // console.log("Adding a post");
+  // console.log(post);
+  return prisma.post.update({ where: { slug }, data: post });
+}
+
+export async function deletePost(slug: string) {
+  return prisma.post.delete({ where: { slug: slug } });
+}
