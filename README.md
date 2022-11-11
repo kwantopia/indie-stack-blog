@@ -33,6 +33,13 @@ Click this button to create a [Gitpod](https://gitpod.io) workspace with the pro
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/from-referrer/)
 
 ## Development
+- If starting from fresh repo
+  ```sh
+  $ cp .env.example .env
+  $ npm install
+  $ npm run setup     # sets up database and runs initial migrations
+  ```
+
 
 - This step only applies if you've opted out of having the CLI install dependencies for you:
 
