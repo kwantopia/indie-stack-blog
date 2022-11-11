@@ -68,7 +68,7 @@ export default function NewPost() {
       </p>
       <p>
         <label htmlFor="markdown">
-          Markdown:
+          Markdown:{" "}
           {errors?.markdown ? (
             <em className="text-red-600">{errors.markdown}</em>
           ) : null}
